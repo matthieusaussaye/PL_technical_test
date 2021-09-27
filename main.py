@@ -86,7 +86,93 @@ def compute_determinant(M : np.ndarray) -> int :
 
         for i in range(len(permutation_int)) :
             prod_permutation *= M[permutation_int[i]-1,i]
-        
+    
         sum+=prod_permutation
     
     return(sum)
+
+def maxminexp(list_num : list,
+              list_op : list) -> tuple :
+	"""
+    Compute the expression that gives the maximum & the difference between the max & the min expression for every possible parenthesis.
+
+    Args:
+        - list_num (list) : list of operands
+        - list_op (list) : list of operators 
+    
+    Return:
+        - result (tuple) : maximal expression & rounded difference betweeen max & min.
+    """
+	
+	llen = len(list_num)
+	minVal = [[ 0 for i in range(llen)] for i in range(llen)]
+	maxVal = [[ 0 for i in range(llen)] for i in range(llen)]
+	maxExpr = [[None for i in range(llen)] for i in range(llen)]
+
+
+	# initializing minval and maxval 2D array
+	for i in range(llen):
+		for j in range(llen):
+			minVal[i][j] = 10**9
+			maxVal[i][j] = -10**9
+
+			# initializing main diagonal by num values
+			if (i == j):
+				minVal[i][j] = maxVal[i][j] = list_num[i]
+				maxExpr[i][j] = str(list_num[i])
+
+	# looping similar to matrix chain multiplication
+	# and updating both 2D arrays
+	for L in range(2, llen + 1):
+		for i in range(llen - L + 1):
+			j = i + L - 1
+			for k in range(i, j):
+
+				minTmp = 0
+				maxTmp = 0
+				end_par = j-1
+
+				max_exprTmp = '('+maxExpr[i][k]+list_op[k]+maxExpr[k + 1][j]+')'
+
+				# if current operator is '+', updating tmp variable by addition
+				if(list_op[k] == '+'):
+
+					minTmp = minVal[i][k] + minVal[k + 1][j] #chose close operands to make next operation
+					maxTmp = maxVal[i][k] + maxVal[k + 1][j]
+					
+
+				# if current operator is '*', updating tmp variable by multiplication
+				elif(list_op[k] == '*'):
+
+					minTmp = minVal[i][k] * minVal[k + 1][j]
+					maxTmp = maxVal[i][k] * maxVal[k + 1][j]
+
+				# if current operator is '-', updating tmp variable by substraction
+				elif(list_op[k] == '-'):
+
+					minTmp = minVal[i][k] - minVal[k + 1][j]
+					maxTmp = maxVal[i][k] - maxVal[k + 1][j]
+
+				# if current operator is '/', updating tmp variable by division
+				elif(list_op[k] == '/'):
+
+					minTmp = minVal[i][k] / minVal[k + 1][j]
+					maxTmp = maxVal[i][k] / maxVal[k + 1][j]
+
+				# updating array values by tmp variables
+				if (minTmp < minVal[i][j]):
+					minVal[i][j] = minTmp
+					
+				if (maxTmp > maxVal[i][j]):
+					maxVal[i][j] = maxTmp
+					maxExpr[i][j] = max_exprTmp
+					
+
+	# last element of first row will store the result
+	print("Minimum value : ",minVal[0][llen - 1],", \
+			Maximum value : ",maxVal[0][llen - 1])
+	
+	diff = int(round(maxVal[0][llen - 1]-minVal[0][llen - 1]))
+
+	return(maxExpr[i][llen-1],diff)
+    
