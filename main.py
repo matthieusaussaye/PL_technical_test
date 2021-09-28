@@ -1,6 +1,7 @@
 import numpy as np
-from nptyping import *
 from typing import *
+from nptyping import *
+
 
 def remove_duplicate(L : list,
                      sort : bool = False) -> list : 
@@ -120,6 +121,8 @@ def operation(operator : str,
     Return:
         - result (float) : result of the operation
     """
+    if not all([isinstance(operator,str),isinstance(operand1,float),isinstance(operand2,float)]) : 
+        raise(f'Incorrects inputs types. operator <{type(operator)}> operand1 <{type(operand1)}> operand2 <{type(operand2)}>') 
 
     # if current operator is '+', updating tmp variable by addition
     if(operator == '+'):
@@ -134,9 +137,12 @@ def operation(operator : str,
         result = operand1 - operand2 #chose close operands to make next operation        
 
     # if current operator is '/', updating tmp variable by division
-    elif(operator == '/'):
-        result = operand1 / operand2 #chose close operands to make next operation        
+    elif(operator == '/' and operand2!=0):
+        result = operand1 / operand2 #chose close operands to make next operation      
 
+    else : 
+        raise Exception(f'Invalid operator : {operator}. or division by 0')
+  
     return result
 
 def maxminexp(list_num : List[Union[int,float]],
@@ -152,17 +158,21 @@ def maxminexp(list_num : List[Union[int,float]],
         - result (tuple) : maximal expression & rounded difference betweeen max & min.
     """
     llen = len(list_num)
+    list_numbers = [float(x) for x in list_num] #convert the list in float for easier type testing.
+
     minVal = [[0 for i in range(llen)] for i in range(llen)]
     maxVal = [[0 for i in range(llen)] for i in range(llen)]
     maxExpr = [[None for i in range(llen)] for i in range(llen)]
     # initializing minval and maxval 2D array
+
     for i in range(llen) :
-        for j in range(llen) :
-            minVal[i][j] = 10**9
-            maxVal[i][j] = -10**9
+        for j in range(llen) : #maximal / minimal unreachable value
+            minVal[i][j] = float(10**9)
+            maxVal[i][j] = float(-10**9)
             if (i==j): # initializing main diagonal by num values
-                minVal[i][j] = maxVal[i][j] = list_num[i]
-                maxExpr[i][j] = str(list_num[i])
+                minVal[i][j] = maxVal[i][j] = list_numbers[i]
+                maxExpr[i][j] = str(list_numbers[i])
+
     # looping similar to matrix chain multiplication
     # and updating both 2D arrays
     for L in range(2, llen + 1):
