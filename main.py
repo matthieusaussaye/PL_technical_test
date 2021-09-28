@@ -15,7 +15,7 @@ def remove_duplicate(L : list,
     Returns: 
         - L_f (list) : List with no duplicated items.
     """
-    if not all([isinstance(L,list),isinstance(sort,bool)]) :
+    if not all([isinstance(L,list),isinstance(sort,bool)]) : #test the types
         raise Exception(f'Incorrect types - L : {type(L)} instead of list, sort : {type(sort)} instead of bool')
 
     if sort : return list(set(L))
@@ -61,6 +61,7 @@ def signature(permutation : List[int]) -> int : #to add test
     """
 
     prod = 1
+    #signature = prod [perm(j)-perm(i)]/[j-i]
     for j in range(len(permutation)) :
         for i in range(j) :
             prod *= (permutation[j]-permutation[i])/((j+1)-(i+1))
@@ -79,28 +80,28 @@ def compute_determinant(M : Union[NDArray[(int)],NDArray[(float)]]) -> int :
     """
 
     if not isinstance(M, np.ndarray) :
-        raise Exception('Matrix type incorrect. Input a np.ndarray matrix NxN with N>1')
+        raise Exception('Matrix type incorrect. Input a np.ndarray matrix')
     
     if len(M.shape) != 2 or M.shape[1] != M.shape[0] :
-        raise Exception('Matrix size incorrect. Input a np.ndarray matrix NxN with N>1')
+        raise Exception('Matrix size incorrect. Input a np.ndarray matrix size NxN with N>1')
 
     if len(M) == 1 :
         return float(M)
     
     size = len(M)
-    indexes_str = "".join(map(str,np.arange(1,size+1,1))) #create string : '1234..len(M)'
-    permutations_str = permutations(indexes_str) #compute all permutations of the string
+    indexes_str = "".join(map(str,np.arange(1,size+1,1))) #create string : '1234..len(M) to be used in permutation function'
+    permutations_str = permutations(indexes_str)          #compute all permutations of the string
     sum = 0
 
     for permutation in permutations_str :
 
-        permutation_int = [int(i) for i in permutation]
-        sign = signature(permutation_int)
+        permutation_int = [int(i) for i in permutation] #convert the permutations as list of int
+        sign = signature(permutation_int)               #compute the signature
 
         prod_permutation = sign
 
         for i in range(len(permutation_int)) :
-            prod_permutation *= M[permutation_int[i]-1,i]
+            prod_permutation *= M[permutation_int[i]-1,i] #compute the determinant as sum of sign*permutations for each index
     
         sum+=prod_permutation
     
@@ -140,7 +141,7 @@ def operation(operator : str,
     elif(operator == '/' and operand2!=0):
         result = operand1 / operand2 #chose close operands to make next operation      
 
-    else : 
+    else : #control division/0 & Operator type
         raise Exception(f'Invalid operator : {operator}. or division by 0')
   
     return result
