@@ -83,9 +83,9 @@ text = preprocess_url(url = "https://www.cftc.gov/dea/futures/electricity_sf.htm
 dict_CFTC = filtering_text(text)
 
 #Save as csv
-pd.DataFrame.from_dict(dict_CFTC).to_csv('CFTC.csv',index=False)
+pd.DataFrame.from_dict(dict_CFTC).to_csv('./data/CFTC.csv',index=False)
 
 #Postprocess the csv
-with open('CFTC.csv', 'r') as f2 :
+with open('./data/CFTC.csv', 'r') as f2 :
     for line in f2 :
         print(line.replace('"',''))
