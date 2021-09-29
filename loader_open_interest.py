@@ -46,25 +46,25 @@ def filtering_text(text : str) -> dict :
             f.write(line)
 
     with open('html_text.txt', 'r') as fi, open('filtered_text.txt', 'w') as new_file :
-        copy_bool = False
+        copy_bool = False #If we copy or not
 
         for line in fi:
-            #Copy the lines that interest
+            #Locate the useful lines
             if ': Positions' in line :
                 copy_bool = False
 
+            #Copy & filter the lines
             if copy_bool and '----' not in line and 'CFTC Code' not in line and 'Open Interest is' not in line : 
                 new_file.write(line.strip())
 
             elif ':Spreading :' in line :
                 copy_bool = True
-    
             
     new_file.close()
     fi.close()
 
     with open('filtered_text.txt', 'r') as f1 : # extract & arrange the filtered informations
-        items=f1.readlines()[0][:-1].split(':') # remove the last blank line with [:-1]
+        items=f1.readlines()[0][:-1].split(':') # remove the last blank line : [:-1] and split items in a list.
         f1.close()
 
     #remove useless files
