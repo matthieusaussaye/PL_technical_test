@@ -78,14 +78,24 @@ def filtering_text(text : str) -> dict :
     return dict_CFTC
 
 
-#Pre-process & extract useful informations
-text = preprocess_url(url = "https://www.cftc.gov/dea/futures/electricity_sf.htm") 
-dict_CFTC = filtering_text(text)
+def url_to_csv(url : str) :
+    """
+    Save the URL as a csv and print every line of the csv.
+    
+    Args :
+        - url (str) : the url of the file
+    """
+    #Pre-process & extract useful informations
+    text = preprocess_url(url=url) 
+    dict_CFTC = filtering_text(text=text)
 
-#Save as csv
-pd.DataFrame.from_dict(dict_CFTC).to_csv('./data/CFTC.csv',index=False)
+    #Save as csv
+    pd.DataFrame.from_dict(dict_CFTC).to_csv('./data/CFTC.csv',index=False)
 
-#Postprocess the csv
-with open('./data/CFTC.csv', 'r') as f2 :
-    for line in f2 :
-        print(line.replace('"',''))
+    #Postprocess the csv
+    with open('./data/CFTC.csv', 'r') as f2 :
+        for line in f2 :
+            print(line.replace('"',''))
+    
+
+url_to_csv(url = "https://www.cftc.gov/dea/futures/electricity_sf.htm")
